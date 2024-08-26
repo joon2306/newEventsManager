@@ -10,12 +10,14 @@
     "build": "eas build --platform android"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.2",
     "date-fns": "^3.6.0",
     "expo": "~51.0.28",
     "expo-constants": "~16.0.2",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.23",
     "expo-status-bar": "~1.12.1",
+    "lodash": "^4.17.21",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-calendars": "^1.1306.0",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/lodash": "^4.17.7",
     "@types/react": "~18.2.45",
     "typescript": "^5.1.3"
   },

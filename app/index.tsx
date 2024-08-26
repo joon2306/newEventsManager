@@ -1,22 +1,31 @@
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Agenda } from "react-native-calendars";
 import { Event, EVENT_TYPE, EventCalendarItems } from "../model/Event";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { format } from "date-fns";
+import eventsService from "../service/EventsService";
+import EventUtils from "../utils/EventUtils";
+import _ from 'lodash';
 
 export default function Home() {
 
     const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
 
-    const events: EventCalendarItems = {
-        ["2024-08-27"]: [{
-            id: 1,
-            description: "description",
-            eventType: 1,
-            title: "Event 1",
-            startDate: "2024-08-27"
-        }]
+    const [events, setEvents] = useState({});
+
+    const [fetchError, setFetchError] = useState(false);
+
+    const initEvents = () => {
+        eventsService.fetchEvents().then(({ data, error }) => {
+            if (error != null) {
+                console.error("Error fetching events:", error);
+                setFetchError(true);
+                return;
+            }
+            const builtEvents = EventUtils.buildEvents(data);
+            setEvents(builtEvents);
+        });
     }
 
     const setActiveDate = (date: string) => {
@@ -79,10 +88,36 @@ export default function Home() {
         }
     });
 
+    useFocusEffect(
+        useCallback(() => {
+            initEvents();  // This will run every time the screen comes into focus
+
+            return () => {
+                // Cleanup if necessary
+            };
+        }, [])
+    );
+
     return (
         <View style={{ flex: 1 }}>
 
-            {(
+            {
+                _.isEmpty(events) && !fetchError && (
+                    <View style={styles.container}>
+                        <Text style={styles.centeredText}>Loading events...</Text>
+                    </View>
+                )
+            }
+
+            {
+                fetchError && (
+                    <View style={styles.container}>
+                        <Text style={styles.centeredText}>Connection Error... Try Later</Text>
+                    </View>
+                )
+            }
+
+            {!_.isEmpty(events) && !fetchError && (
                 <Agenda
                     items={events}
                     renderItem={handleRenderItem}
