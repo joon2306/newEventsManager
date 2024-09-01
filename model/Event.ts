@@ -17,3 +17,17 @@ export interface EventCalendarItems {
     [date: string]: Event[]
 }
 
+export interface EventServerResponse {
+    data: Event[],
+    error: string | null
+}
+
+
+export interface AddEvent {
+    eventName: string,
+    eventDate: Date | undefined,
+    eventDescription:string,
+    eventId: number,
+    initialEventType: number,
+    isEdit: boolean
+}

@@ -68,9 +68,8 @@ export default function Home() {
 
         const type = EVENT_TYPE[eventType as keyof typeof EVENT_TYPE];
 
-        const edit = (item: Event) => {
-            // navigation.navigate('Add Event', { eventDate: selectedDate, eventName: item.title, eventType: item.eventType, eventDescription: item.description, eventId: item.id });
-            console.log(item);
+        const edit = ({id, title, description, startDate, eventType}: Event) => {
+            router.push(`create/add?id=${id}&title=${title}&startDate=${startDate}&eventType=${eventType}&description=${description}`)
         }
 
 
@@ -233,7 +232,7 @@ export default function Home() {
                 !_.isEmpty(events) && !fetchError && (
                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                         <Banner message={bannerMsg} isVisible={isBannerVisible} />
-                        <Button icon="calendar-plus" mode="outlined" style={{ marginHorizontal: 20 }} onPress={() => console.log("Btn Add clicked")}> Add</Button>
+                        <Button icon="calendar-plus" mode="outlined" style={{ marginHorizontal: 20 }} onPress={() => router.push("/create/add")}> Add</Button>
                         <Searchbar
                             placeholder="Search"
                             onChangeText={setSearchQuery}
